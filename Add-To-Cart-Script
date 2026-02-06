@@ -1,0 +1,90 @@
+package org.example;
+
+import org.openqa.selenium.By;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.chrome.ChromeOptions;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.Wait;
+import org.openqa.selenium.support.ui.WebDriverWait;
+
+import java.time.Duration;
+import java.util.Map;
+import java.util.Scanner;
+
+public class AddToCart {
+    public static void main(String[] args) {
+        ChromeOptions options = new ChromeOptions();
+        options.setExperimentalOption("prefs", Map.of(
+                "profile.password_manager_leak_detection", false,
+                "credentials_enable_service", false,
+                "profile.password_manager_enabled", false
+        ));
+        Scanner scanner = new Scanner(System.in);
+
+        System.out.println("Enter Username: ");
+        String username = scanner.nextLine();
+
+        System.out.println("Enter Password: ");
+        String password = scanner.nextLine();
+
+        System.out.println("Enter First Name for Checkout: ");
+        String first_name = scanner.nextLine();
+
+        System.out.println("Enter Last Name for Checkout: ");
+        String last_name = scanner.nextLine();
+
+        System.out.println("Enter Zip/Postal Code for Checkout: ");
+        String postal_code = scanner.nextLine();
+
+        WebDriver driver = new ChromeDriver(options);
+        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+        driver.get("https://www.saucedemo.com/");
+        driver.manage().window().maximize();
+
+            WebElement enter_username = wait.until(ExpectedConditions.elementToBeClickable(driver.findElement(By.id("user-name"))));
+            enter_username.sendKeys(username);
+
+            WebElement enter_password = wait.until(ExpectedConditions.elementToBeClickable(driver.findElement(By.id("password"))));
+            enter_password.sendKeys(password);
+
+            WebElement click_login_btn = wait.until(ExpectedConditions.elementToBeClickable(driver.findElement(By.id("login-button"))));
+            click_login_btn.click();
+
+            WebElement add_to_cart_btn = wait.until(ExpectedConditions.elementToBeClickable(driver.findElement(By.id("add-to-cart-sauce-labs-backpack"))));
+            add_to_cart_btn.click();
+
+            WebElement cart_btn = wait.until(ExpectedConditions.elementToBeClickable(driver.findElement(By.id("shopping_cart_container"))));
+            cart_btn.click();
+
+            WebElement checkout_btn = wait.until(ExpectedConditions.elementToBeClickable(driver.findElement(By.id("checkout"))));
+            checkout_btn.click();
+
+            WebElement enter_first_name = wait.until(ExpectedConditions.elementToBeClickable(By.id("first-name")));
+            enter_first_name.sendKeys(first_name);
+
+            WebElement enter_last_name = wait.until(ExpectedConditions.elementToBeClickable(By.id("last-name")));
+            enter_last_name.sendKeys(last_name);
+
+            WebElement enter_postal_code = wait.until(ExpectedConditions.elementToBeClickable(driver.findElement(By.id("postal-code"))));
+            enter_postal_code.sendKeys(postal_code);
+
+            WebElement click_continue_checkout = wait.until(ExpectedConditions.elementToBeClickable(driver.findElement(By.id("continue"))));
+            click_continue_checkout.click();
+
+            WebElement click_finish_btn = wait.until(ExpectedConditions.elementToBeClickable(driver.findElement(By.id("finish"))));
+            click_finish_btn.click();
+
+            WebElement verify_checkout = wait.until(ExpectedConditions.elementToBeClickable(driver.findElement(By.className("complete-header"))));
+
+            if (verify_checkout.getText().contains("Thank you for your order!")){
+                System.out.println("Test Passed!");
+            }
+            else
+                System.out.println("Test Failed!!!");
+
+            driver.quit();
+    }
+
+}
